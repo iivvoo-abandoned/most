@@ -1,0 +1,32 @@
+This document briefly describes some of the GUI aspects related to MOST.
+
+Widget layout
+-------------
+
+Describe layout of widgets in all views, i.e. what subwidgets are available
+and their classes (for configuration)
+
+Attaching / detaching
+---------------------
+
+Attachable/detachable components are completely contained in a container (called
+'detach_container') (i.e.  a 1 row vbox). When detaching, this container is 
+remove()d from its parent (i.e. a window or a tab in a notebook, basically any 
+kind of container), and packed in the new parent using 
+pack_start(detach_container). Optionally (?), the old container is destroyed.
+
+A special wrapper is created around the detach_container widget, which stores
+the state of the childcontainer (i.e. in window, tab, etc). Initially, only
+support for 2 containers is possible, i.e. either a window or a tab in a notebook.
+This wrapper also catches/handles the event (or at least provides the handler)
+that triggers attaching/detaching, called handle_detach_toggle.
+
+The wrapper will also be configured with 2 factories for creating the parent
+container. After attaching/detaching, it will attempt to notify the childwidget
+of the event, so titles etc. can be reset. A default factory for creating a 
+GtkWindow is (will be) supplied.
+
+IDEAS
+-----
+
+2 levels of notebooks (servers and per server channels, queries, etc)

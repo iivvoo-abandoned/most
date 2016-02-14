@@ -1,0 +1,9 @@
+This implementation is basically the txtview multiplexed over multiple 
+windows. Lots can be added, though I don't know if it's worth the effort
+(perhaps work on a more complete swing based GUI?)
+
+Things that should be implemented are:
+
+- window handling (closing)
+- textarea doesnt (always?) scroll down -- fixed
+- shutdown isn't perfect.

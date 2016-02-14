@@ -1,0 +1,73 @@
+# defaults
+print "Loading global RC"
+
+# globals
+
+global most_user_home
+most_user_home = home + "/.most"
+
+class client:
+    DEBUG_SILENT = 0
+    DEBUG_ERROR = 1
+    DEBUG_ALL = 2
+    use_msg_win = 0             # use messagewindow for individual messages
+                                # it won't make sense for the txtview
+    
+    debug = DEBUG_ALL           # - gives error
+
+    version = "0.1"
+    home = "http://www.amaze.nl/~ivo/most/"
+
+    gui = "gtkview"             # what gui to use: gtkview, txtview, qtview (?)
+
+#
+# 'txtview' is the only supported gui for java at this moment.
+# 
+import sys
+if sys.platform[:4] == 'java':
+    client.gui = 'awtview'
+
+class servers:
+    # defaults
+    nick = 'VladDrac'
+    password = 'FooBar'
+
+    ircservers = [
+                   { 'host':'irc.xs4all.nl', 'port':[6664,6665,6666,6667], 
+                      'nick':'VladDrac', 'pass':None },
+                   { 'host':'irc.openprojects.net', 'port':6667,
+                      'nick':'VladDrac' }
+                 ]
+    notify = []
+
+class logging:
+    # Most of this doesn't work (yet). log_base does.
+    ORDER_EXCLUDE=0
+    ORDER_INCLUDE=1
+    
+    CHANNEL_ALL=0
+    QUERY_ALL=1
+    
+    logging = 1
+    log_base = most_user_home + "/logs"
+    log_exclude = []
+    log_include = [ QUERY_ALL, CHANNEL_ALL ]
+
+    log_messages = 0 # log messages to 1 large messagefile -- support this at all?
+    logfilename = "%(server)s%(channel)%(target)" # does not work yet
+
+    order = [ORDER_EXCLUDE, ORDER_INCLUDE] 
+    #
+    # Flush logs after every <n> lines.
+    flush_after_lines = 1              # 0 = disable
+    #
+    # Flush after <n> seconds of idleness?
+    flush_after_secs = 10               # 0 = disable
+
+class gtkview:
+    rc = "../rc/entry.gtkrc"
+
+class txtview:
+    pass
+class dcc:
+    download_dir = "/tmp"

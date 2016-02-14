@@ -1,0 +1,312 @@
+""" 
+    a view for a single server. This view must be wrapped in some container,
+    i.e. window or notebook
+"""
+
+# $Id: serverView.py,v 1.30 2002/02/11 00:03:01 ivo Exp $
+
+from gtk import *
+from GDK import *
+from libglade import *
+from string import *
+
+from msgSupport import msgSupport
+from genericView import genericView
+from channelView import channelView
+from queryView import queryView
+from msgView import msgView
+
+from detachSupport import detachSupport
+from nestable import nestable
+
+from ui import HistoryEntry
+from util import casedict
+from util.debug import debug, DEBUG, NOTICE, ERROR
+
+#
+# a serverView is a single tab in the ircView notebook.
+# It does some trickery because glade creates the first tab for us
+# by default, and we add the next ones (this is done in ircView.poolfactory
+
+class serverView(msgSupport, genericView, nestable, detachSupport):
+    def __init__(self, name=None):
+        """ passing name will cause a crash """
+        genericView.__init__(self, "detach_container")
+        container = self.get_widget("detach_container")
+        container.show()
+        nestable.__init__(self, container, state=nestable.STATE_TAB)
+
+        self.text = self.get_widget("text")
+        self.entry = HistoryEntry(self.get_widget("entry"))
+        self.text.set_word_wrap(1)
+        bindings = { 'input_activate':self.input_activate,
+                     'on_nickentry_activate':self.on_nickentry_activate,
+                     'detach_toggled':self.handle_detach_toggle}
+                     # window handling stuff
+        self.bindings(bindings)
+
+        self.nickentry = self.get_widget("nickentry")
+        font = self.nickentry.get_style().font
+        width = font.width('MMMMMMMMMM')
+        self.nickentry.set_usize(width, -1)
+
+        self.handler = None
+        self.name = None
+        self.channels = casedict()
+        self.queries = casedict()
+        self.online = casedict()
+        self.offline = casedict()
+        self.tree = None
+        self.channel_tree = None
+        self.query_tree = None
+        self.notify_tree = None
+        self.online_tree = None
+        self.offline_tree = None
+        self.msgwin = None
+
+        self.modelabel = self.get_widget("modelabel")
+        self.modestr = []
+
+        if name:
+            self.setname(name)
+
+    def set_handler(self, handler):
+        ## XXX little ambiguous with setcallback 
+        self.handler = handler
+
+    def on_nickentry_activate(self, item):
+        nick = item.get_text()
+        self.handler.view_nick(None,nick)
+
+    def setname(self, name):
+        self.name = name
+        self.set_title(name) # from nestable
+        self.item.children()[0].set_text(name)
+
+    def setnick(self, nick):
+        self.nickentry.set_text(nick)
+
+    def set_tree(self, item, tree):
+        self.item = item
+        self.tree = tree
+        #
+        # Initialize the tree with channel, queries and msgwin
+        #
+        # The dummy (not-show()n) items below are to fix a bug (?) in gtk,
+        # where a subtree is no longer a subtree after removing the last
+        # element
+        channel_treeitem = GtkTreeItem("channels")
+        self.tree.append(channel_treeitem)
+        self.channel_tree = GtkTree()
+        self.channel_tree.append(GtkTreeItem("dummy"))
+        channel_treeitem.set_subtree(self.channel_tree)
+        channel_treeitem.show()
+
+        query_treeitem = GtkTreeItem("queries")
+        self.tree.append(query_treeitem)
+        self.query_tree = GtkTree()
+        self.query_tree.append(GtkTreeItem("dummy"))
+        query_treeitem.set_subtree(self.query_tree)
+        query_treeitem.show()
+
+        notify_treeitem = GtkTreeItem("notifies")
+        self.tree.append(notify_treeitem)
+        self.notify_tree = GtkTree()
+        self.notify_tree.append(GtkTreeItem("dummy"))
+        notify_treeitem.set_subtree(self.notify_tree)
+        notify_treeitem.show()
+
+        # add online/offline subtrees to notifytree
+
+        online_treeitem = GtkTreeItem("online")
+        self.notify_tree.append(online_treeitem)
+        self.online_tree = GtkTree()
+        self.online_tree.append(GtkTreeItem("dummy"))
+        online_treeitem.set_subtree(self.online_tree)
+        online_treeitem.show()
+
+        offline_treeitem = GtkTreeItem("offline")
+        self.notify_tree.append(offline_treeitem)
+        self.offline_tree = GtkTree()
+        self.offline_tree.append(GtkTreeItem("dummy"))
+        offline_treeitem.set_subtree(self.offline_tree)
+        offline_treeitem.show()
+
+        self.msgwin_treeitem = GtkTreeItem("messages")
+        self.tree.append(self.msgwin_treeitem)
+        self.msgwin_treeitem.show()
+        self.msgwin_treeitem.connect("button-press-event", 
+                                     self.tree_handler, "<messages>")
+
+        #
+        # This tree has gotten a little complex, and some items may be
+        # located too deep.
+        #
+        # An alternative would be to make offline a sub-tree off online
+        # (who would want to see who's offline, and not who's online?
+
+    def create_channel(self, name):
+        """ create a channelwindow (pool?), add new window to tree """
+        win = GtkWindow()
+        newchan = channelView(name, win, nestable.STATE_WINDOW)
+        win.show()
+        newchan.set_detach_handler(self.detach_handler)
+        treeitem = GtkTreeItem(name)
+        self.channel_tree.append(treeitem)
+        channeltree = GtkTree()
+        treeitem.set_subtree(channeltree)
+        treeitem.show()
+        newchan.set_tree(channeltree)
+        self.channels[name] = (newchan, treeitem)
+        treeitem.connect("button-press-event", self.tree_handler, name)
+        newchan.set_handler(self.handler)
+        return newchan
+
+    def create_query(self, name):
+        """ create a query (pool?), add new window to tree """
+        win = GtkWindow()
+        newquery = queryView(name, win, nestable.STATE_WINDOW)
+        win.show()
+        newquery.set_detach_handler(self.detach_handler)
+        treeitem = GtkTreeItem(name)
+        self.query_tree.append(treeitem)
+        treeitem.show()
+        self.queries[name] = (newquery, treeitem)
+        treeitem.connect("button-press-event", self.tree_handler, name)
+        newquery.set_handler(self.handler)
+
+        #
+        # Remove name from msgwin, if any
+        if self.msgwin:
+            self.msgwin.deluser(name)
+        return newquery
+
+    def nickchange(self, oldnick, newnick, isme=0):
+        """ handle nickchange, i.e. rename queries """
+        if self.queries.has_key(oldnick):
+            query, item = self.queries[oldnick]
+            del self.queries[oldnick]
+            item.children()[0].set_text(newnick)
+            query.setname(newnick)
+            
+            self.queries[newnick] = (query, item)
+
+        if isme:
+            self.nickentry.set_text(newnick)
+            self.announce("You are now known as %s" % newnick)
+
+    def modechange(self, nick, modechange):
+        """ invoked when personal modes change """
+        ##
+        ## XXX move to class, along with channelView
+        minmodes = modechange.minmodes()
+        plusmodes = modechange.plusmodes()
+        for i in minmodes:
+            self.modestr.remove(i)
+        for i in plusmodes:
+            if i not in self.modestr:
+                self.modestr.append(i)
+        self.modelabel.set_text("+"+join(self.modestr, ""))
+
+        modestr = ""
+        if plusmodes != "":
+            modestr = modestr + "+" + plusmodes
+        if minmodes != "":
+            modestr = modestr + "-" + minmodes
+        self.announce("%s sets mode %s" % (nick, modestr))
+
+    def delete_channel(self, name):
+        if self.channels.has_key(name):
+            c = self.channels[name]
+            self.tree.remove_item(c[1])
+            del self.channels[name]
+            # close window, etc?
+        else:
+            debug(ERROR, "Attempt to remove non existing channel %s" % name)
+
+    def delete_query(self, name):
+        if self.queries.has_key(name):
+            q = self.queries[name]
+            self.tree.remove_item(q[1])
+            del self.queries[name]
+        else:
+            debug(ERROR, "Attempt to remove non existing query %s" % name)
+
+    def tree_handler(self, item, event, name):
+        """ 
+            handles events (button clicks) on items in our delegated part
+            of the tree widget
+        """
+        if name == "<messages>":
+            self.get_msgwin().raisewin()  
+        elif self.channels.has_key(name):
+            self.channels[name][0].raisewin()
+        elif self.queries.has_key(name):
+            self.queries[name][0].raisewin()
+        else:
+            debug(ERROR, "Received GtkTreeItem event for %s" % name)
+
+    def view_handler(self, item, event, data=None):
+        """ handler invoked by view-components """
+        # forward everything
+        self.handler(item, event, data)
+
+    def get_msgwin(self, create=1):
+        """ return the messagewindow, create one if necessary """
+        if (not self.msgwin) and create:
+            self.msgwin = msgView()
+            self.msgwin.set_handler(self.handler)
+            self.msgwin.set_detach_handler(self.detach_handler)
+        return self.msgwin
+
+    def close_msgwin(self):
+        if self.msgwin:
+            self.msgwin.destroy()
+            self.msgwin = None
+
+    def notify_online(self, name):
+        if self.offline.has_key(name):
+            self.announce("Signon by %s detected" % name)
+            item = self.offline[name]
+            self.offline_tree.remove_item(self.offline[name])
+            del self.offline[name]
+        else:
+            item = GtkTreeItem(name)
+            item.connect("button-press-event", self.tree_handler, name)
+        self.online[name] = item
+        self.online_tree.append(item)
+        item.show()
+
+    def notify_offline(self, name):
+        if self.online.has_key(name):
+            self.announce("Signoff by %s detected" % name)
+            item = self.online[name]
+            self.online_tree.remove_item(self.online[name])
+            del self.online[name]
+        else:
+            item = GtkTreeItem(name)
+            item.connect("button-press-event", self.tree_handler, name)
+        self.offline[name] = item
+        self.offline_tree.append(item)
+        item.show()
+
+    def reset(self, propagate=1, level=0):
+        """ reset interface (i.e. channellists, etc), optionally propagate """
+        for (name, item) in self.online.items():
+            self.online_tree.remove_item(item)
+            del self.online[name]
+            self.offline[name] = item
+            self.offline_tree.append(item)
+            item.show()
+        if propagate:
+            # level=1 would mean removing the channels (?)
+            for (name, item) in self.channels.items():
+                item[0].reset(propagate, level)
+
+            for (name, item) in self.queries.items():
+                item[0].reset(propagate, level)
+
+    def input_activate(self, item):
+        text = item.get_text()
+        item.set_text("")
+        self.handler.handle_input(self.name, text)

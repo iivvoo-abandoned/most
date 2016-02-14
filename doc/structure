@@ -1,0 +1,55 @@
+Core dispatcht over meerdere server instances. Deze houden ieder state bij.
+Via globale state?
+
+MODEL - CONTROLLER - VIEW
+
+GUI is passief, Controller bepaalt op basis van state welke akties te
+ondernemen.
+
+http://st-www.cs.uiuc.edu/users/smarch/st-docs/mvc.html
+
+The view manages
+the graphical and/or textual output to the portion of the bitmapped display
+that is allocated to its application.  The controller interprets the
+mouse and keyboard inputs from the user, commanding the model and/or the view
+to change as appropriate.  Finally, the model manages the behavior and
+data of the application domain, responds to requests for information about its
+state (usually from the view), and responds to instructions to change state
+(usually from the controller).
+
+Maw, netwerk connect met controller
+
+
+irc state (model) -- controller -- view (gui) (shared main, channel, etc)
+                          ^
+			  |
+			  V
+		       netwerk
+
+De view bestaat uit deels eigen componenten (channel, query windows) en
+gesharede componenten (tabbed notebooks, server window)
+
+GUI doet geen enter/leave, controller doet dit (want in controller komen
+zowel gui als serverthreads - controller weet dus wanner enter/leave nodig is!)
+
+
+Hoe werkt MVC met externe scripts?
+
+- directory layout:
+
+  most.py
+  model/
+    ircModel.py
+    (after refactoring: channelModel.py, serverModel.py?)
+    
+  controller/
+    ircController.py
+    (events?)
+  view/
+    (events?)
+    ircView.py
+    msgView.py
+    queryView.py
+    channelView.py
+  events/ (?)
+  util/

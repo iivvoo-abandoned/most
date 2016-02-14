@@ -1,0 +1,49 @@
+- selected nicks in the channellist get deselected if their mode changes
+  (because of delete/add in usermodechange)
+- the model isn't updated appropriately, i.e. with channel-usermode changes
+  (chanusermodes fixed, 28/7/01)
+- bans aren't initialized on join - remove may cause keyerror (fixed, 28/7/01)
+- An error resulting from a write from a gui-thread will result in a deadlock
+  in serverDispatcher.server_handler
+- invalidate channelstates on disconnect (so you can close channelwindows in 
+  a disconnected server)
+- nickchanges aren't tracked in the tree widget (i.e. queries and channel users) 
+- dalnet recognizes most as a spambot, probably because of the USER reg. 
+  (fixed, 2/9/01)
+- messagewindow nickname selection after opening a query sometimes fails.
+
+:irc.nl.uu.net 406 VladDrac pluck :There was no such nickname
+
+Note that you should really be using the GdkColormap.alloc method to
+allocate colours in order to be portable.  Code like the following:
+  cmap = widget.get_colormap()
+  colour = cmap.alloc("red")  # you can use strings
+  colour = cmap.alloc(0xffff, 0, 0) # or 16-bit quantities
+
+[DEBUG] Parser: 
+[DEBUG] Message type: PREFIXED
+Nick: irc.nl.uu.net
+Origin: irc.nl.uu.net
+Target: VladDrac
+Command: 477
+Remainder: Channel doesn't support modes
+rest: +foobar
+
+Exception in thread Thread-2:
+Traceback (innermost last):
+  File "/var/tmp/python/python-root/usr/lib/python1.5/threading.py", line 376, in __bootstrap
+    self.run()
+  File "./net/serverConnection.py", line 92, in run
+    self.handler(self, serverEvent(serverEvent.DATA, str))
+  File "./controller/serverDispatcher.py", line 104, in server_handler
+    getattr(self, "disp_%s" % ircMsg.command)(item, ircMsg)
+  File "./controller/serverDispatcher.py", line 510, in disp_477
+    self.channels[ircMsg.rest[0]].announce(
+TypeError: not all arguments converted
+
+[DEBUG] WRITE ISON  VladDrac JanJoost _Vampira_ p|n Morticka LadyFire emax Frenkel Vlinder Vlindertj Pluck Jeroen juul claartje
+[DEBUG] WRITE ISON  VladDrac JanJoost _Vampira_ p|n Morticka LadyFire emax Frenkel Vlinder Vlindertj Pluck Jeroen juul claartje
+[DEBUG] RAW: type: 0
+data: type: 0
+
+

@@ -1,0 +1,42 @@
+Todo before first release:
+
+- nick, server, ircname configurable (ircname perhaps fixed for now)
+- display of notices? (private) notices to active window?
+- Add icq support: http://www-jcsu.jesus.cam.ac.uk/~mwh21/hacks/pyicqlib.html
+  (better make this optional?)
+- use CLIST for channeluserlist
+- support for bold, underline, inverse and colors in text
+- port to windows
+- support for global cfg structe where settings can be restored/retrieved.
+
+- dcc (send, chat)
+- rewrite view-stuff, make txtview (sort of) base for all views
+  (which gives us a depent api as well)
+
+gtkview:
+
+- mode checkboxes
+- more complete menu's
+- support deletion of server windows/tabs
+
+- status somewhere (usermode, away) - in servertab/win? (statusbar in tabwin?)
+- channelbuttons
+- split channelscreen? (circus)
+- view log option (like verybuddy), shows previous sessions
+
+small stuff:
+
+- tabs aren't always properly higlighted, it seems.
+- show tree in usable state, i.e. with nodes expanded (should be
+  configurable eventually)
+- closing serverconnections / tabs / windows
+- make /new command jump to new tab?
+- store/remember/configure window sizes
+- better functioning usermenu's
+
+Other interesting stuff
+
+- http://jabberpy.sourceforge.net
+
+:carter.openprojects.net 320 VladDrak rik :is an identified user
+$Id: TODO,v 1.29 2002/03/04 01:05:03 ivo Exp $

@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<GTK-Interface>
+
+<project>
+  <name>Tmp</name>
+  <program_name>tmp</program_name>
+  <directory></directory>
+  <source_directory>src</source_directory>
+  <pixmaps_directory>pixmaps</pixmaps_directory>
+  <language>C</language>
+  <gnome_support>True</gnome_support>
+  <gettext_support>True</gettext_support>
+</project>
+
+<widget>
+  <class>GtkWindow</class>
+  <name>window1</name>
+  <title>window1</title>
+  <type>GTK_WINDOW_TOPLEVEL</type>
+  <position>GTK_WIN_POS_NONE</position>
+  <modal>False</modal>
+  <allow_shrink>False</allow_shrink>
+  <allow_grow>True</allow_grow>
+  <auto_shrink>False</auto_shrink>
+
+  <widget>
+    <class>GtkScrolledWindow</class>
+    <name>scrolledwindow1</name>
+    <hscrollbar_policy>GTK_POLICY_ALWAYS</hscrollbar_policy>
+    <vscrollbar_policy>GTK_POLICY_ALWAYS</vscrollbar_policy>
+    <hupdate_policy>GTK_UPDATE_CONTINUOUS</hupdate_policy>
+    <vupdate_policy>GTK_UPDATE_CONTINUOUS</vupdate_policy>
+
+    <widget>
+      <class>GtkCList</class>
+      <name>clist</name>
+      <can_focus>True</can_focus>
+      <columns>3</columns>
+      <column_widths>102,80,80</column_widths>
+      <selection_mode>GTK_SELECTION_SINGLE</selection_mode>
+      <show_titles>True</show_titles>
+      <shadow_type>GTK_SHADOW_IN</shadow_type>
+
+      <widget>
+	<class>GtkLabel</class>
+	<child_name>CList:title</child_name>
+	<name>label3</name>
+	<label>label3</label>
+	<justify>GTK_JUSTIFY_CENTER</justify>
+	<wrap>False</wrap>
+	<xalign>0.5</xalign>
+	<yalign>0.5</yalign>
+	<xpad>0</xpad>
+	<ypad>0</ypad>
+      </widget>
+
+      <widget>
+	<class>GtkLabel</class>
+	<child_name>CList:title</child_name>
+	<name>label4</name>
+	<label>label4</label>
+	<justify>GTK_JUSTIFY_CENTER</justify>
+	<wrap>False</wrap>
+	<xalign>0.5</xalign>
+	<yalign>0.5</yalign>
+	<xpad>0</xpad>
+	<ypad>0</ypad>
+      </widget>
+
+      <widget>
+	<class>GtkLabel</class>
+	<child_name>CList:title</child_name>
+	<name>label5</name>
+	<label>label5</label>
+	<justify>GTK_JUSTIFY_CENTER</justify>
+	<wrap>False</wrap>
+	<xalign>0.5</xalign>
+	<yalign>0.5</yalign>
+	<xpad>0</xpad>
+	<ypad>0</ypad>
+      </widget>
+    </widget>
+  </widget>
+</widget>
+
+</GTK-Interface>

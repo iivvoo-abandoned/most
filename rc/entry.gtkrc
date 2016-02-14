@@ -1,0 +1,19 @@
+style "textstyle" 
+{
+    font = "-adobe-helvetica-medium-r-normal-*-12-*-*-*-p-*-iso8859-1"
+}
+
+style "entrystyle" 
+{
+    font = "-adobe-helvetica-medium-r-normal-*-10-*-*-*-p-*-iso8859-1"
+}
+
+style "labelstyle"
+{
+    font = "-adobe-helvetica-medium-r-normal-*-10-*-*-*-p-*-iso8859-1"
+}
+
+widget "*.entry" style  "entrystyle"
+widget "*.text" style "textstyle"
+widget_class "*.GtkLabel" style "labelstyle"
+widget_class "*.GtkEntry" style "entrystyle"

@@ -1,0 +1,122 @@
+class Xdcc: # basic dcc class
+    MODE_INITIATE = 1
+    MODE_ACCEPT = 2
+
+    def __init__(self, mode=0):
+        self.mode = mode # initiate, accept
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.localaddr = (None, -1)
+        self.remoteaddr = (None, -1)
+
+    def accept(self, host, port):
+        self.mode = dcc.MODE_ACCEPT
+        self.remoteaddr = (host, port)
+
+    def initiate(self):
+        """ return host,port info """
+        self.mode = dcc.MODE_INITIATE
+        self.sock.bind(("", 0))
+        self.localaddr = self.sock.getsockname()
+        return self.localaddr
+
+    def establish(self):
+        """ establish the dcc connection (either accept/initiate) """
+        if self.mode == dcc.MODE_INITIATE:
+            self.sock.listen(1)
+            newsock = self.sock.accept()
+            self.sock.close()
+            self.sock = newsock[0] # [1,2] is the remote peer
+            self.remoteaddr = newsock[1]
+            #
+            # Generate ESTABLISHED event
+            self.handler(self, serverEvent(serverEvent.CONNECTED))
+        elif self.mode == dcc.MODE_ACCEPT:
+            self.sock.connect(self.remoteaddr)
+            self.handler(self, serverEvent(serverEvent.CONNECTED))
+        else:
+            debug(ERROR, "Unknown dcc chat mode %d" % self.mode)
+
+#
+# Create a base class 'message IO' for both this and serverConnection
+
+class Xdcc_chat(dcc, msgreader, Thread):
+    MSGSIZE = 256
+    def __init__(self, mode=dcc.MODE_INITIATE, host=None, port=0):
+        dcc.__init__(self, mode)
+        msgreader.__init__(self, MSGSIZE)
+        Thread.__init__(self)
+        self.handler = None
+        self.buffer = MSGBuffer()
+        self.running = 1
+        self.nick = "" # Do we want this stored here?
+
+    def initiate(self):
+        """ return host, port info """
+        return dcc.initiate(self)
+
+    def set_nick(self, nick):
+        self.nick = nick
+
+    def accept(self, host, port):
+        dcc.accept(self, host, port)
+
+    def setcallback(self, handler):
+        self.handler = handler
+        
+    def send(self, msg): # similar to serverConnection
+        debug(DEBUG, "DCC WRITE " + msg)
+        try:
+            if 1: # self.state == serverConnection.STATE_CONNECTED:    
+                self.sock.send(msg + "\n")
+            else: 
+                debug(DEBUG, "Disconnected, can't send.")
+        except socket.error, e:
+            if type(e) == type(()):
+                self.errno = e[0]
+                self.errstr = e[1]
+            else:
+                self.errno = -1
+                self.errstr = e
+            self.handler(self, serverEvent(serverEvent.ERROR))
+ 
+    def run(self):
+        # connect
+        #
+        # Catch error, generate appropriate event
+        dcc.establish(self)
+
+        self.running = 1
+        while self.running:
+            # XXX use select to timeout. Make it configurable
+            str = self.read()
+            if str != None:
+                self.handler(self, serverEvent(serverEvent.DATA, str))
+            else:
+                self.handler(self, serverEvent(serverEvent.ERROR))
+    
+    def stop(self):
+        self.running = 0 # again, same as serverConnection
+
+class dccfile(dcc, Thread):
+    def __init__(self):
+        dcc.__init__(self)
+        Thread.__init__(self)
+
+    def get(self, host, port):
+        dcc.accept(self, host, port)
+
+    def send(self, file):
+        """ return host,port info """
+        dcc.initiate(self)
+        # ...
+        return self.localaddr
+
+    def setcallback(self, handler):
+        pass
+        
+    def run(self):
+        dcc.establish(self)
+        net.make_nonblocking(self.sock) ## NEW
+        ##
+        ## In loop: read/send data, send/read checks (or ignore in powermode)
+

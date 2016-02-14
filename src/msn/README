@@ -1,0 +1,26 @@
+Bouw:
+
+geheel asynchroon. Methods worden aangeroepen en genereren asynchrone events
+(net als irc).
+
+sommige asynchrone events worden direkt afgevangen, zoals:
+
+- XFR
+- USR (authenticatie stappen)
+
+
+Session Semantics
+-----------------
+
+A session is a 1-n chat on a switchboard. It can be used for both 1-1 chatting
+and 1-n chatting. This means that a session does not have 1 specific target
+(actually, n can be 0!)
+
+Some clients will remove connections to the switchboard after a certain period.
+
+In a 1-1 setup, after one of the clients drops the connection, the connection
+is re-established through a standard cal/ring. In a 1-n (n > 1), the client
+will be explicitly removed from the session, and has to be reinvited explicitly.
+
+Once a client signs of (and no longer has a SB connection), he is assumed to
+have left the session.

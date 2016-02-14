@@ -1,0 +1,32 @@
+This directory contains several different (user) interfaces for most.
+
+API's have not been defined yet, so please reverse engineer the existing
+ones if you plan to build a new interface :)
+
+At this moment, there are 3 views available:
+
+txtview - a minimal, simple, trivial, text-only view (no curses). This may
+          also be a very usefull base for views in general (as has been done
+          with awtview)
+awtview - an AWT based view for use with jython (this view won't work with
+          cpython!). Based on txtview (and heavily derived from the code),
+          so very minimalistic
+gtkview - a GTK based view. Currently the most advanced GUI by far. Won't work
+          (of course) with Jython.
+
+Suggestions for other views:
+
+- curses based, perhaps with colorsupport, etc. This should exist next to
+  the standard txtview, as a cursesbased view won't work with Jython
+- Qt based. I already have a volunteer for this.
+- Swing, to make Most a nifty jython client as well. (I may work on this myself)
+
+update 23/01/2002
+
+The event handling code has been extensively rewritten, guiMessage has 
+disappeared and viewHandler/metaHandler have been introduced as base classes 
+for event handling classes.
+
+At this moment, only gtkview uses this, the other views are heavily broken.
+
+$Id: README,v 1.3 2002/01/23 17:07:01 ivo Exp $

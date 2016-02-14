@@ -1,0 +1,39 @@
+dcc interface:
+
+0.1:
+
+- autoaccept dcc chat requests
+  (if no querywindow is available, one will be created)
+- good semantics for dcc / chat buttons in queryWidget
+  - chat will not work if dcc is not established
+  - closing dcc will unset chat
+- opening query should setup dcc (existing) stuff correctly
+
+0.2:
+
+- make autoaccept of chat requests optional, accept through special gui
+  (pending chats) or 
+
+
+dcc manager:
+
+1 row per dcc
+nicely alligned
+common attrs + type specific widget (i.e. progressionbar for transfers)
+attributes:
+  type (chat, send, get)
+  flags (power?, host, port?)
+  state (connected, pending, completed)
+  other party (nick)
+  send/get: progressionbar, bytes/sec
+  chat: bytes sent/received
+  filename, size
+  
+
+Issues:
+-------
+
+- most initiates chat, other party initiates as well, most accepts, 1 pending
+  connection.
+- not online-replies can be used to clear pending sessions
+- nick changes should propagate to dcc as well, as far as possible

@@ -1,0 +1,102 @@
+Welcome to MOST
+
+MOST stands for "Ministry Of Silly Talks", derived from the Monty Python
+sketch 'Ministry of silly walks'
+
+Because IRC is silly :)
+
+MOST is under continuous development so the information below may not
+always fully reflect the code.
+
+License:
+
+Please check the file LICENSE which you should have received with MOST.
+
+Available functionality:
+
+- Basic windowing support:
+  - main server window
+  - channel windows with userlist
+  - msg window to receive messages 
+  - query window for 1-1 communication
+
+- Support for display of common channel events:
+  - mode
+  - kick
+  - join/leave
+  - msg 
+
+- Some commands:
+  - join
+  - leave
+  - me (action)
+  - msg
+  - nick
+
+Lacking functionality:
+
+- Support for non-unix platforms. It should be possible to port this
+  client to Windows (and I will try this soon)
+- lots of commands
+- dcc
+- ctcp (except for sending/receiving CTCP ACTION, some basic responses)
+- scripting (but this is definately planned!)
+- server selection window
+- etc..
+
+Using / installing MOST:
+------------------------
+
+MOST currently lacks a nice configuration GUI for nickname, ircname, servers
+etc. nickname, servername and port are specified on the commandline or 
+through environment variables.
+
+Through commandline:
+
+./most.py nickname servername[:port]
+
+i.e. ./most.py VladDrac irc.openprojects.net:6667
+
+Through environment variables:
+
+export IRCNICK=VladDrac
+export IRCNAME=irc.openprojects.net:6667
+./most.py
+
+If you wish to install a notify list, this is done through the NOTIFY
+environment variable (and only this way), i.e.
+export NOTIFY="VladDrac Bert Ernie"
+
+Warning!
+--------
+
+MOST is currently still very immature. It may (will) not have all the 
+functionality you would expect. Actually, you may find the current 
+release disappointing. The motto is release early, release often, and
+that's why I've released it at this stage (and to satisfy the folks on
+#python :)
+
+About the code:
+---------------
+
+I'm trying to use the MVC design pattern (model - view - controller), where
+the view is the gui, model is the state of the client and the controller
+mediates between these two (and the ircserver). Keep this in mind when browsing
+the code. 
+
+How to contact me:
+------------------
+
+email: ivo@amaze.nl
+IRC: VladDrac (on openprojects.net and ircnet, ususally on #python)
+web: http://vanderwijk.info/most
+
+Bug reports:
+------------
+
+Please try to include as much information as possible, including version
+numbers, tracebacks, actions taken to trigger / cause the bug, etc.
+
+
+
+$Id: README,v 1.4 2002/02/22 16:50:35 ivo Exp $

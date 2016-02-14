@@ -1,0 +1,69 @@
+New, mor TWISTED like protocol implementation:
+
+Lowlevel protocol does (lowlevel) sending, receiving and dispatching
+or irc messages.
+
+class LowLevelIRC(basic.LineReceiver):
+    def lineReceived(self, line):
+        parse
+        self.ircMsgReceived(prefix, command, args)
+
+    def ircMsgReceieved(prefix, command, args):
+        pass
+        
+SecondLevel implements dispatcher handler (like LineReceiver vs. Protocol?)
+that accepts LowLevel messages and dispatches them over basic, raw methods,
+such as privmsg (receive) / send_msg
+
+class SecondLevelIRC(LowLevelIRC):
+    def ircMsgReceieved(prefix, command, args):
+        if command == 'PRIVMSG':
+            self.privmsg(prefix, args)
+        elif ..
+            ...
+
+    def privmsg(self, prefix, args):
+        pass
+
+    def join(self, channel, user):
+        pass
+
+    ## sending routines
+
+    def msg(self, target, msg):
+        self.write(...)
+
+LowLevel/SecondLevel can be combined
+
+ThirdLevel may implement more state/knowlede in the invoked handlers, i.e.
+channelJoined (if the client self successfully joined a channel), etc.
+
+class ThirdLevelIRC(SecondLevelIRC):
+    def join(self, channel, user):
+        if isme(user): # how to determine? Examine prefix?
+            self.channelJoined(channel)
+
+    def channelJoined(self, channel):
+        pass
+
+        
+FourthLevel may implement ctcp and create (async) DCC protocol things.
+
+ApplicationLevel is the level implemented by the application, that catches
+all the events, optionally overrides them, adjusts model/view, etc.
+
+##
+
+Problems with current twisted implementation:
+
+- IRC protocol contains state (such as: channels, unused though)
+- too much protocol/state/handling in IRCClient class, i.e.
+  ping(), say == leave (but with # in front of channel),
+  hardcoded # for channels, etc.
+
+Pro's: client / server combined:
+
+    IRC
+    /  \
+client server
+

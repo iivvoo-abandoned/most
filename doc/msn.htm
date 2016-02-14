@@ -1,0 +1,288 @@
+<html>
+<!-- creation date: 7/18/01 -->
+<head>
+<title>MSN Messenger protocol -(practical implementation) </title>
+<meta name="Description" content="">
+<meta name="Keywords" content="">
+<meta name="Author" content="venkat mani">
+<meta name="Generator" content="AceHTML 4 Freeware">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
+<STYLE TYPE="text/css">
+<!--
+BODY {
+    margin-top:0; margin-left:0; margin-right:0;
+}
+.lien {
+    position: relative; top: -5; color: #FFFFFF; font-size: 8pt; font-family: verdana;  font-weight: bold; letter-spacing: -1pt; text-decoration: none;
+}
+.divise {
+    position: relative; top: -3; color: #C0C0C0; background: #000000; font-size: 12pt;
+}
+-->
+</STYLE>
+<SCRIPT LANGUAGE="JavaScript">
+<!-- begin script
+function netie(net, ie) {
+  if ((navigator.appVersion.substring(0,3) >= net && navigator.appName == 'Netscape' && net != -1) || (navigator.appVersion.substring(0,3) >= ie && navigator.appName.substring(0,9) == 'Microsoft' && ie != -1))
+    return true;
+else return false;
+}
+//  end script -->
+</SCRIPT>
+</head>
+<body BGCOLOR="#000000" text="#FFFFFF" vlink=#66ccff link=#99ccff>
+
+	  <TABLE WIDTH=100% CELLPADDING=0 BORDER=0 CELLSPACING=0 BGCOLOR="#000000">
+     <TR>
+       <TD ALIGN=LEFT HEIGHT=25>
+	   <BR><BR>
+   <NOBR>
+   <SPAN CLASS="divise">&nbsp;</SPAN>
+   <A HREF="/index.htm" CLASS="lien" onMouseOver="netie(-1,4)?this.style.color='#FF0000':null;" onmouseout="netie(-1,4)?this.style.color='#FFFFFF':null;">Home</A>
+   <SPAN CLASS="divise">|</SPAN>
+   <A HREF="/article.htm" CLASS="lien" onMouseOver="netie(-1,4)?this.style.color='#FF0000':null;" onmouseout="netie(-1,4)?this.style.color='#FFFFFF':null;">Articles</A>
+   <SPAN CLASS="divise">|</SPAN>
+   
+   <A HREF="/codes.htm" CLASS="lien" onMouseOver="netie(-1,4)?this.style.color='#FF0000':null;" onmouseout="netie(-1,4)?this.style.color='#FFFFFF':null;">Code Projects</A>
+   <SPAN CLASS="divise">|</SPAN>
+   
+   <A HREF="/snippets.htm" CLASS="lien" onMouseOver="netie(-1,4)?this.style.color='#FF0000':null;" onmouseout="netie(-1,4)?this.style.color='#FFFFFF':null;">Code Snippets</A>
+   <SPAN CLASS="divise">|</SPAN>
+   
+   <A HREF="/consulting.htm" CLASS="lien" onMouseOver="netie(-1,4)?this.style.color='#FF0000':null;" onmouseout="netie(-1,4)?this.style.color='#FFFFFF':null;">Consulting</A>
+   <SPAN CLASS="divise">|</SPAN>
+   
+   <A HREF="/questions.htm" CLASS="lien" onMouseOver="netie(-1,4)?this.style.color='#FF0000':null;" onmouseout="netie(-1,4)?this.style.color='#FFFFFF':null;">Questions</A>
+   <SPAN CLASS="divise">|</SPAN>
+   
+   <A HREF="/abtme.htm" CLASS="lien" onMouseOver="netie(-1,4)?this.style.color='#FF0000':null;" onmouseout="netie(-1,4)?this.style.color='#FFFFFF':null;">About Me</A>
+   <SPAN CLASS="divise">|</SPAN>
+   
+   
+   </NOBR>
+       </TD>
+     </TR>
+   </TABLE>
+   
+   <BR><BR><BR><BR><BR><P align=center><FONT face=Verdana><B>MSN Messenger Protocol(Practical Implementation) </B></FONT></P>
+<P align=center><FONT face=Verdana><B>a.k.a </B></FONT></P>
+<P align=center><FONT face=Verdana><B>How to make your own MSN Messenger In 
+VB</B></FONT></P><BR><BR>
+   <P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>You 
+have been using MSN for quite some time wondering how it works. Well You need 
+not look any further. This article will not just tell you how MSN works but will 
+also tell you how to make your own version of MSN messenger. You can download a 
+sample application from here <A href="unify.zip">Unify.zip</A> .Let's get ready 
+to rumble!!!!</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF> </FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>We 
+can split up the working of MSN messenger into 2 phases</FONT></FONT></P>
+<UL>
+<LI>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF>Authentication Phase</FONT></FONT></P>
+<LI>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF>Instant Messaging Phase</FONT></FONT></P></LI></UL>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF> </FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>The 
+Authentication Phase involves logging into the MSN messenger server and also 
+(friends) list retrieval in this case.</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>The 
+Instant Messaging Phase involves sending/accepting requests for an Instant 
+Messaging session and also sending/receiving messages.</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF> </FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>The 
+MSN messenger protocol is an ASCII based protocol. In other words the commands 
+are in pure English !!!.The first phase involves connecting to an MSN messenger 
+server .In this case we shall connect to the server 64.4.13.58 on port 1863(MSN 
+messenger works through port 1863).</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>Once 
+the connection is done we need to start the log in process. The first stage in 
+this phase is the versioning stage. In this stage the client (in this case your 
+app) lists/sends the versions that it can support to the server and waits for 
+the server to respond.</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF><B>VER 0 MSNP5 MSNP4 CVRO</B></FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>In 
+the MSN messenger protocol a "trial id" is sent along with every command. The 
+trial id starts from 0 and is incremented every time the server responds 
+successfully to the client's commands.</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF> </FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>The 
+server responds like this</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF><B>VER 0 MSNP5 MSNP4</B></FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>The 
+Client and the server have agreed on a version in which they will 
+communicate.</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF> </FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>Next 
+the client sends a request to the server asking it for the name of the security 
+package it supports for authentication.</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF><B>INF 1</B></FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF>Unlike Yahoo, Rediff and a few other Messengers MSN does not 
+actually send the password as it is.It encrypts the password while sending it 
+ensuring that your password will not be leaked out easily if somebody monitors 
+your port.</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF> </FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>The 
+server responds with this </FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF><B>INF 1 MD5</B></FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>Here 
+MD5 is the name of the security package which the server currently 
+supports.</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>Next 
+the client sends the userid to the server</FONT></FONT></P>
+<P align=left> </P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF><B>USR 2  MD5  I  <A 
+href="mailto:venky_dude@hotmail.com">venky_dude@hotmail.com</A></B></FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>Here 
+the server does a check whether it contains all the relevant details about the 
+user for authentication .If it does not then it sends the following 
+reply</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF> XFR 2  NS 64.4.13.55:1863  0</FONT></B></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>What 
+the server says is that the client should connect to the Notification Server(NS) 
+on 64.4.13.55 on port 1863. We close the current connection and repeat the  
+steps while being connected to the new server i.e  64.4.13.55</FONT></FONT></P>
+<UL>
+<LI>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>(client)   VER 3 MSNP5 MSNP4 CVRO</FONT></B></FONT> </P>
+<LI>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>(server) VER 3 MSNP5 MSNP4 </FONT></B></FONT> </P>
+<LI>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>(client)   INF  4</FONT></B></FONT> </P>
+<LI>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>(server) INF  4  MD5</FONT></B></FONT> </P>
+<LI>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>(client)  USR  5  MD5 I venky_dude@hotmail.com</FONT></B></FONT> 
+</P></LI></UL>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>Now 
+the server to which we are connected to has the relevant information about the 
+user trying to log in. The server replies this way</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>USR 5  MD5  S 989048851.1851137130</FONT></B></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF> The 
+string which is sent by the server is the " MD5 Hash". It is a hash generated by 
+the server and is used in the authentication process. The client then has to 
+send the password which is encrypted using the <A 
+href="http://userpages.umbc.edu/~mabzug1/cs/md5/md5.html">MD5</A> algorithm.In 
+effect the client has to send the unique <A 
+href="http://userpages.umbc.edu/~mabzug1/cs/md5/md5.html">MD5</A> equivalent of 
+the <A href="http://userpages.umbc.edu/~mabzug1/cs/md5/md5.html">MD5</A> hash 
+i.e 989048851.1851137130 in this case and the password combined .i.e. <A 
+href="http://userpages.umbc.edu/~mabzug1/cs/md5/md5.html">MD5</A> equivalent of 
+(hash+pass). In this case it turns out to be 
+3b7926d277068ec49576a0c40598ff21.</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>USR 6 MD5 S 3b7926d277068ec49576a0c40598ff21</FONT></B></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>If 
+the password is right then the server replies with this</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>USR 6 OK venky_dude@hotmail.com venkat</FONT></B></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>Here 
+the last word is the nickname/name by which the user is known.</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>Now 
+we are logged into the server but our status is still offline. We need to change 
+our status to online in order to send and receive messages. The client does this 
+in the following way</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>CHG 7 NLN</FONT></B></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>The 
+server replies with some details about emails in the account and also friends 
+who are online.</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF><B>CHG 7 NLN<BR>MSG Hotmail Hotmail 221<BR>MIME-Version: 
+1.0<BR>Content-Type: text/x-msmsgsinitialemailnotification; 
+charset=UTF-8<BR><BR>Inbox-Unread: 2<BR>Folders-Unread: 0<BR>Inbox-URL: 
+/cgi-bin/HoTMaiL<BR>Folders-URL: /cgi-bin/folders<BR>Post-URL: 
+http://www.hotmail.com</B></FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>To 
+get a list of people who are in our friends list we may send this 
+command</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF><B>LST 8 RL</B></FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>The 
+server responds this way</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>LST 8 RL 69 1 19 venky_dude@hotmail.com venkat<BR>LST 8 RL 69 2 19 
+puxxxxx@hotmail.com PUJA<BR>LST 8 RL 69 3 19 vancxxxxx@hotmail.com 
+ramachandran<BR>LST 8 RL 69 4 19 moxxxxx@hotmail.com chandramouli<BR>LST 8 RL 69 
+5 19 v_n_xxxxx@hotmail.com Narayanaswamy<BR>LST 8 RL 69 6 19 dexxxxx@hotmail.com 
+Venkatesh<BR>LST 8 RL 69 7 19 lousydxxxxx@hotmail.com 
+deepika%20kalyani%20Vairam                                                  LST 
+8 RL 69 8 19 hexxxxxr@hotmail.com Hetchar%20Ramachandran<BR>LST 8 RL 69 9 19 
+ambxxxxx@hotmail.com Aiyer<BR>LST 8 RL 69 10 19 suxxx@hotmail.com Ganesh<BR>LST 
+8 RL 69 11 19 deexxxxx@hotmail.com Deepak<BR>LST 8 RL 69 12 19 
+anilxxxxx@hotmail.com anil<BR>LST 8 RL 69 13 19 dixxxxx@hotmail.com 
+&lt;Diamond&gt;<BR>LST 8 RL 69 14 19 nvxxxx@hotmail.com giri<BR>LST 8 RL 69 15 
+19 shxxx@hotmail.com Hari<BR>LST 8 RL 69 16 19 radhikashuxxxxx@hotmail.com 
+radhika<BR>LST 8 RL 69 17 19 eskaxxxxx@hotmail.com kannan<BR>LST 8 RL 69 18 19 
+shaxxxxx@hotmail.com Shankar<BR>LST 8 RL 69 19 19 puneetagarxxxxx@hotmail.com 
+puneet</FONT></B></FONT></P>
+<P align=left> </P>
+<P align=left> </P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT 
+color=#FFFFFF>*Every time a friend comes online the server(NS) sends us the 
+following command</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>NLN 9 NLN deaxxxx@hotmail.com Venkatesh</FONT></B></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>and 
+when the friend goes offline the server sends us this</FONT></FONT></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><B><FONT 
+color=#FFFFFF>FLN 9 FLN deaxxxx@hotmail.com </FONT></B></FONT></P>
+<P align=left> </P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><FONT color=#FFFFFF>We 
+have successfully logged into the MSN Messenger server. The Instant Messaging 
+phase is next.</FONT></FONT></P>
+   <BR><BR><BR>
+<P align=left></P>
+<P align=left><FONT face="Arial, Helvetica, sans-serif"><VAR><FONT 
+color=#000000>                                                                                 
+</FONT><FONT face="Arial, Helvetica, sans-serif"><VAR><FONT color=#000000><A 
+href="msn2.htm"><IMG height=30 alt="Next Page" src="jj0041.gif" width=67 
+border=0></A></FONT></VAR></FONT><FONT 
+color=#000000>                                                         
+</FONT></VAR></FONT></P>
+   
+   <BR><BR><BR>
+   <!-- BEGIN WEBSIDESTORY CODE -->
+<!-- COPYRIGHT 1997-2000 WEBSIDESTORY, INC. ALL RIGHTS RESERVED. U.S.PATENT PENDING. Privacy notice at: http://websidestory.com/privacy -->
+<!-- webbot bot="HTMLMarkup" startspan -->
+<p align="left"><A HREF="http://rd1.hitbox.com/rd?acct=WQ51071822NZ28EN0&p=s">
+<IMG SRC="http://hg1.hitbox.com/HG?hc=wf114&l=y&hb=WQ51071822NZ28EN0&cd=1&n=msn.htm" height=62 width=88 ALT="Click Here!" border=0></A></p>
+<!-- webbot bot="HTMLMarkup" endspan -->
+<!-- END WEBSIDESTORY CODE  -->
+<br>
+<!--WEBBOT bot="HTMLMarkup" startspan ALT="Site Meter" -->
+<script type="text/javascript" language="JavaScript">var site="sm1venkmsn"</script>
+<script type="text/javascript" language="JavaScript1.2" src="http://sm1.sitemeter.com/js/counter.js?site=sm1venkmsn">
+</script>
+<noscript>
+<a href="http://sm1.sitemeter.com/stats.asp?site=sm1venkmsn" target="_top">
+<img src="http://sm1.sitemeter.com/meter.asp?site=sm1venkmsn" alt="Site Meter" border=0></a>
+</noscript>
+<!-- Copyright (c)2000 Site Meter -->
+<!--WEBBOT bot="HTMLMarkup" Endspan -->
+
+<br>
+<P ALIGN=CENTER><A HREF="http://www.findcommerce.com/tracking/sarefer.dll?HostBannerID=297650" TARGET="_top"><IMG SRC="http://www.venkydude.com/banner22.gif" HEIGHT=60 WIDTH=468 BORDER=0 ALT="Online Gambling"></A><IMG SRC="http://www.whispa.com/tracking/exposure.dll?297650" WIDTH=1 HEIGHT=1 BORDER=0><BR><A HREF="http://www.safe-audit.com/" TARGET="_top"><FONT SIZE=1>This banner was supplied by Safe-Audit</FONT></A></P>
+</body>
+</html>

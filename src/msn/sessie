@@ -1,0 +1,63 @@
+Sending:  VER 0 MSNP2
+
+Received:  VER 0 MSNP2
+
+Sending:  INF 1
+
+Received:  INF 1 MD5
+
+Sending:  USR 2 MD5 I vladdrac112@hotmail.com
+
+Received:  XFR 2 NS 64.4.13.81:1863
+
+['XFR', '2', 'NS', '64.4.13.81:1863']
+Moving to 64.4.13.81:1863
+Sending:  USR 3 MD5 I vladdrac112@hotmail.com
+
+Received:  USR 3 MD5 S 1006172945.1772401923
+
+cd174f6d158f636e4b648effef623077
+Sending:  USR 4 MD5 S cd174f6d158f636e4b648effef623077
+
+Received:  USR 4 OK vladdrac112@hotmail.com Ivo 1
+
+Sending:  SYN 5 1
+
+Received:  MSG Hotmail Hotmail 95
+MIME-Version: 1.0
+Content-Type: text/x-msmsgsprofile; charset=UTF-8
+LoginTime: 1006172945
+
+
+SYN 5 11
+GTC 5 11 A
+BLP 5 11 AL
+PRP 5 11 PHH 
+PRP 5 11 PHW 
+PRP 5 11 PHM 
+PRP 5 11 MOB N
+PRP 5 11 MBE N
+LSG 5 11 1 1 0 ~ 0
+LST 5 FL 11 1 3 maaike_roelofs@hotmail.com maaike_roelofs@hotmail.com 0
+BPR 11 maaike_roelofs@hotmail.com PHH 
+BPR 11 maaike_roelofs@hotmail.com PHW 
+
+BPR 11 maaike_roelofs@hotmail.com PHM 
+BPR 11 maaike_roelofs@hotmail.com MOB N
+LST 5 FL 11 2 3 claartjethijs@hotmail.com claartjethijs@hotmail.com 0
+BPR 11 claartjethijs@hotmail.com PHH 
+BPR 11 claartjethijs@hotmail.com PHW 
+BPR 11 claartjethijs@hotmail.com PHM 
+BPR 11 claartjethijs@hotmail.com MOB N
+LST 5 FL 11 3 3 data_devil@hotmail.com data_devil@hotmail.com 0
+BPR 11 data_devil@hotmail.com PHH 
+BPR 11 data_devil@hotmail.com PHW 
+BPR 11 data_devil@hotmail.com PHM 
+BPR 11 data_devil@hotmail.com MOB N
+LST 5 AL 11 1 3 maaike_roelofs@hotmail.com maaike_roelofs@hotmail.com
+LST 5 AL 11 2 3 claartjethijs@hotmail.com claartjethijs@hotmail.com
+LST 5 AL 11 3 3 data_devil@hotmail.com data_devil@hotmail.com
+LST 5 BL 11 0 0
+LST 5 RL 11 1 3 maaike_roelofs@hotmail.com maaike_roelofs@hotmail.com
+LST 5 RL 11 2 3 claartjethijs@hotmail.com claartjethijs@hotmail.com
+LST 5 RL 11 3 3 data_devil@hotmail.com data_devil@hotmail.com
